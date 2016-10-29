@@ -46,7 +46,7 @@ function init(lat: number, lng: number) {
             );
             out geom;
         `;
-        fetch('http://overpass-api.de/api/interpreter?data=' + query)
+        fetch('https://overpass-api.de/api/interpreter?data=' + query)
             .then(res => res.json())
             .then((data: OverpassJSON) => {
                 queryState.textContent = 'Creating nodes...';
