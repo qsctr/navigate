@@ -4,7 +4,7 @@ onerror = alert;
 
 navigator.geolocation.getCurrentPosition(
     pos => init(pos.coords.latitude, pos.coords.longitude),
-    () => init(25.116035, 121.529946) // fallback to TAS coordinates
+    () => init(25.116035, 121.529946) // fallback to TAS
 );
 
 function init(lat: number, lng: number) {
