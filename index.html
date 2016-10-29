@@ -1,0 +1,58 @@
+<!doctype html>
+<html>
+    <head>
+        <meta charset="utf-8">
+        <title>Navigate</title>
+        <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Roboto">
+        <link rel="stylesheet" href="https://fonts.googleapis.com/icon?family=Material+Icons">
+        <link rel="stylesheet" href="https://code.getmdl.io/1.2.1/material.teal-deep_orange.min.css">
+        <script defer src="https://code.getmdl.io/1.2.1/material.min.js"></script>
+        <link rel="stylesheet" href="https://unpkg.com/leaflet@1.0.1/dist/leaflet.css">
+        <link rel="stylesheet" href="css/styles.css">
+    </head>
+    <body>
+        <div id="map"></div>
+        <div id="sidebar">
+            <div id="intro-screen">
+                <p>Pan and zoom the map to include all the roads that you want to search for.</p>
+                <p>Try to only search for as much roads as you need to.</p>
+                <button class="mdl-button mdl-js-button mdl-button--raised mdl-js-ripple-effect mdl-button--colored" id="query-button">Query OpenStreetMap Overpass API</button>
+            </div>
+            <div id="querying-screen">
+                <br>
+                <div class="mdl-progress mdl-js-progress mdl-progress__indeterminate" id="query-progress"></div>
+                <br>
+                <p id="query-state"></p>
+            </div>
+            <div id="choose-screen">
+                <p>Select the starting node and goal node from the map, then choose a search type.</p>
+                <p id="start-node-id-p">Start: <span id="start-node-id"></span></p>
+                <p id="goal-node-id-p">Goal: <span id="goal-node-id"></span></p>
+                <label class="mdl-radio mdl-js-radio">
+                    <input type="radio" id="uniform-cost-radio" name="search-type" class="mdl-radio__button">
+                    <span class="mdl-radio__label">Uniform cost search</span>
+                </label>
+                <label class="mdl-radio mdl-js-radio">
+                    <input type="radio" id="greedy-radio" name="search-type" class="mdl-radio__button">
+                    <span class="mdl-radio__label">Greedy search</span>
+                </label>
+                <label class="mdl-radio mdl-js-radio">
+                    <input type="radio" id="a-star-radio" name="search-type" class="mdl-radio__button">
+                    <span class="mdl-radio__label">A* search</span>
+                </label>
+                <br>
+                <button class="mdl-button mdl-js-button mdl-button--raised mdl-js-ripple-effect mdl-button--colored" id="search-button" disabled>Start search</button>
+            </div>
+            <div id="results-screen">
+                <br>
+                <div class="mdl-progress mdl-js-progress" id="search-progress"></div>
+                <br>
+                <p id="search-state"></p>
+            </div>
+        </div>
+        <script src="https://unpkg.com/leaflet@1.0.1/dist/leaflet.js"></script>
+        <script src="https://cdn.rawgit.com/adamhooper/js-priority-queue/v0.1.5/priority-queue.min.js"></script>
+        <script src="out-js/search.js"></script>
+        <script src="out-js/ui.js"></script>
+    </body>
+</html>

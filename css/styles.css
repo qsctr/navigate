@@ -1,0 +1,39 @@
+html, body, #map {
+    height: 100%;
+}
+
+body {
+    margin: 0;
+    display: flex;
+    flex-direction: row;
+    font-family: 'Roboto', Arial;
+}
+
+p, .leaflet-popup-content {
+    font-size: 16px;
+}
+
+#map {
+    flex: 1;
+}
+
+#sidebar {
+    width: 300px;
+    padding: 12px 16px;
+}
+
+#sidebar > * {
+    display: none;
+}
+
+#start-node-id-p {
+    color: red;
+}
+
+#goal-node-id-p {
+    color: green;
+}
+
+.mdl-radio {
+    display: block;
+}
