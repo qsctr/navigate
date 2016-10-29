@@ -23,7 +23,7 @@ function init(lat: number, lng: number) {
     const map = L.map('map', {
         center: [lat, lng],
         zoom: 17,
-        minZoom: 14
+        minZoom: 12
     });
     L.tileLayer('http://{s}.tile.osm.org/{z}/{x}/{y}.png', {
         attribution: '&copy; <a href="http://osm.org/copyright">OpenStreetMap</a> contributors',
