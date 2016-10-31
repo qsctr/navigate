@@ -150,7 +150,7 @@ function init(lat: number, lng: number) {
                             (nodeIdToCircle.get(expanded.id) as L.Circle)
                             .setStyle(Object.assign({
                                 color: 'darkblue'
-                            }, defaultCircleStyle))
+                            }, defaultCircleStyle));
                         }
                         L.polyline(res.path, {
                             weight: 8,
