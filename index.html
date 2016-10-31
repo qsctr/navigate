@@ -17,6 +17,8 @@
                 <p>Pan and zoom the map to include all the roads that you want to search for.</p>
                 <p>Try to only search for as much roads as you need to.</p>
                 <button class="mdl-button mdl-js-button mdl-button--raised mdl-js-ripple-effect mdl-button--colored" id="query-button">Query OpenStreetMap Overpass API</button>
+                <p></p>
+                <p class="red" id="area-too-big-warning">Area is too big.</p>
             </div>
             <div id="querying-screen">
                 <br>
@@ -27,8 +29,8 @@
             <div id="choose-screen">
                 <p><span id="nodes-created"></span> nodes created.</p>
                 <p>Select the starting node and goal node from the map, then choose a search type.</p>
-                <p id="start-node-id-p">Start: <span id="start-node-id"></span></p>
-                <p id="goal-node-id-p">Goal: <span id="goal-node-id"></span></p>
+                <p id="start-node-id-p" class="red">Start: <span id="start-node-id"></span></p>
+                <p id="goal-node-id-p" class="green">Goal: <span id="goal-node-id"></span></p>
                 <label class="mdl-radio mdl-js-radio">
                     <input type="radio" id="uniform-cost-radio" name="search-type" class="mdl-radio__button">
                     <span class="mdl-radio__label">Uniform cost search</span>

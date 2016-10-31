@@ -13,6 +13,14 @@ p, .leaflet-popup-content {
     font-size: 16px;
 }
 
+.red {
+    color: red;
+}
+
+.green {
+    color: green;
+}
+
 #map {
     flex: 1;
 }
@@ -22,16 +30,8 @@ p, .leaflet-popup-content {
     padding: 12px 16px;
 }
 
-#sidebar > * {
+#sidebar > *, #area-too-big-warning {
     display: none;
-}
-
-#start-node-id-p {
-    color: red;
-}
-
-#goal-node-id-p {
-    color: green;
 }
 
 .mdl-radio {

@@ -10,7 +10,8 @@ navigator.geolocation.getCurrentPosition(
 function init(lat: number, lng: number) {
     const qs: typeof document.querySelector = document.querySelector.bind(document);
     const introScreen = qs('#intro-screen') as HTMLElement;
-    const queryButton = qs('#query-button');
+    const queryButton = qs('#query-button') as HTMLButtonElement;
+    const areaTooBig = qs('#area-too-big-warning') as HTMLElement;
     const queryingScreen = qs('#querying-screen') as HTMLElement;
     const queryState = qs('#query-state');
     const chooseScreen = qs('#choose-screen') as HTMLElement;
@@ -23,14 +24,22 @@ function init(lat: number, lng: number) {
     const searchState = qs('#search-state');
     const map = L.map('map', {
         center: [lat, lng],
-        zoom: 17,
-        minZoom: 12
+        zoom: 17
     });
     L.tileLayer('http://{s}.tile.osm.org/{z}/{x}/{y}.png', {
         attribution: '&copy; <a href="http://osm.org/copyright">OpenStreetMap</a> contributors',
         maxZoom: 21,
         maxNativeZoom: 19
     }).addTo(map);
+    map.on('zoom', () => {
+        if (map.getZoom() < 13) {
+            queryButton.disabled = true;
+            showElem(areaTooBig);
+        } else {
+            queryButton.disabled = false;
+            hideElem(areaTooBig);
+        }
+    });
     showElem(introScreen);
     queryButton.addEventListener('click', () => {
         hideElem(introScreen);
