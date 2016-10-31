@@ -14,6 +14,7 @@ function init(lat: number, lng: number) {
     const queryingScreen = qs('#querying-screen') as HTMLElement;
     const queryState = qs('#query-state');
     const chooseScreen = qs('#choose-screen') as HTMLElement;
+    const nodesCreatedElem = qs('#nodes-created');
     const startNodeIdElem = qs('#start-node-id');
     const goalNodeIdElem = qs('#goal-node-id');
     const searchButton = qs('#search-button') as HTMLButtonElement;
@@ -128,10 +129,10 @@ function init(lat: number, lng: number) {
                         checkSearchButton();
                     });
                 }
+                nodesCreatedElem.textContent = nodes.length.toString();
                 queryState.textContent = '';
                 hideElem(queryingScreen);
                 showElem(chooseScreen);
-                console.log(nodes.length + ' nodes created');
                 function checkSearchButton() {
                     searchButton.disabled = !(startNode && goalNode && searchFunction);
                 }
