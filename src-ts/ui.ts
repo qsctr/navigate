@@ -51,8 +51,8 @@ function init(lat: number, lng: number) {
             .then((data: OverpassJSON) => {
                 queryState.textContent = 'Creating nodes...';
                 const nodes = overpassToGraphNodes(data);
-                let startNode: GraphNode;
-                let goalNode: GraphNode;
+                let startNode: GraphNode | null = null;
+                let goalNode: GraphNode | null = null;
                 let searchFunction: SearchFunction;
                 const defaultCircleStyle = {
                     radius: 6,
@@ -72,9 +72,12 @@ function init(lat: number, lng: number) {
                             startLink.textContent = 'Set as start';
                             startLink.addEventListener('click', () => {
                                 if (node === goalNode) {
-                                    return;
+                                    goalNode = null;
+                                    goalNodeIdElem.textContent = '';
+                                    (nodeIdToCircle.get(node.id) as L.Circle)
+                                        .setStyle(defaultCircleStyle);
                                 }
-                                if (startNode !== undefined) {
+                                if (startNode !== null) {
                                     (nodeIdToCircle.get(startNode.id) as L.Circle)
                                         .setStyle(defaultCircleStyle);
                                 }
@@ -93,9 +96,12 @@ function init(lat: number, lng: number) {
                             goalLink.textContent = 'Set as goal';
                             goalLink.addEventListener('click', () => {
                                 if (node === startNode) {
-                                    return;
+                                    startNode = null;
+                                    startNodeIdElem.textContent = '';
+                                    (nodeIdToCircle.get(node.id) as L.Circle)
+                                        .setStyle(defaultCircleStyle);
                                 }
-                                if (goalNode !== undefined) {
+                                if (goalNode) {
                                     (nodeIdToCircle.get(goalNode.id) as L.Circle)
                                         .setStyle(defaultCircleStyle);
                                 }
@@ -134,7 +140,7 @@ function init(lat: number, lng: number) {
                     showElem(resultsScreen);
                     searchProgress.classList.add('mdl-progress__indeterminate');
                     searchState.textContent = 'Searching...';
-                    const res = searchFunction(startNode, goalNode);
+                    const res = searchFunction(startNode as GraphNode, goalNode as GraphNode);
                     searchProgress.classList.remove('mdl-progress__indeterminate');
                     if (res === null) {
                         searchState.textContent = 'Path not found';
