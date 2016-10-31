@@ -59,57 +59,58 @@ function init(lat: number, lng: number) {
                     stroke: false,
                     fillOpacity: 0.7
                 };
-                const nodeIdToCircle = new Map<number, L.Circle>(nodes.map(node => [
-                    node.id,
-                    L.circle(node, defaultCircleStyle).bindPopup(circle => {
-                        const elem = document.createElement('div');
-                        const id = document.createElement('div');
-                        id.textContent = node.id.toString();
-                        elem.appendChild(id);
-                        const startLink = document.createElement('a');
-                        startLink.href = '#';
-                        startLink.textContent = 'Set as start';
-                        startLink.addEventListener('click', () => {
-                            if (node === goalNode) {
-                                return;
-                            }
-                            if (startNode !== undefined) {
-                                (nodeIdToCircle.get(startNode.id) as L.Circle)
-                                    .setStyle(defaultCircleStyle);
-                            }
-                            startNode = node;
-                            startNodeIdElem.textContent = startNode.id.toString();
-                            checkSearchButton();
-                            circle.closePopup();
-                            (circle as L.Circle).setStyle(Object.assign({
-                                color: 'red'
-                            }, defaultCircleStyle));
-                        });
-                        elem.appendChild(startLink);
-                        elem.appendChild(document.createElement('br'));
-                        const goalLink = document.createElement('a');
-                        goalLink.href = '#';
-                        goalLink.textContent = 'Set as goal';
-                        goalLink.addEventListener('click', () => {
-                            if (node === startNode) {
-                                return;
-                            }
-                            if (goalNode !== undefined) {
-                                (nodeIdToCircle.get(goalNode.id) as L.Circle)
-                                    .setStyle(defaultCircleStyle);
-                            }
-                            goalNode = node;
-                            goalNodeIdElem.textContent = goalNode.id.toString();
-                            checkSearchButton();
-                            circle.closePopup();
-                            (circle as L.Circle).setStyle(Object.assign({
-                                color: 'green'
-                            }, defaultCircleStyle));
-                        });
-                        elem.appendChild(goalLink);
-                        return elem;
-                    }).addTo(map)
-                ] as [number, L.Circle]));
+                const nodeIdToCircle = new Map<number, L.Circle>();
+                for (const node of nodes) {
+                    nodeIdToCircle.set(node.id,
+                        L.circle(node, defaultCircleStyle).bindPopup(circle => {
+                            const elem = document.createElement('div');
+                            const id = document.createElement('div');
+                            id.textContent = node.id.toString();
+                            elem.appendChild(id);
+                            const startLink = document.createElement('a');
+                            startLink.href = '#';
+                            startLink.textContent = 'Set as start';
+                            startLink.addEventListener('click', () => {
+                                if (node === goalNode) {
+                                    return;
+                                }
+                                if (startNode !== undefined) {
+                                    (nodeIdToCircle.get(startNode.id) as L.Circle)
+                                        .setStyle(defaultCircleStyle);
+                                }
+                                startNode = node;
+                                startNodeIdElem.textContent = startNode.id.toString();
+                                checkSearchButton();
+                                circle.closePopup();
+                                (circle as L.Circle).setStyle(Object.assign({
+                                    color: 'red'
+                                }, defaultCircleStyle));
+                            });
+                            elem.appendChild(startLink);
+                            elem.appendChild(document.createElement('br'));
+                            const goalLink = document.createElement('a');
+                            goalLink.href = '#';
+                            goalLink.textContent = 'Set as goal';
+                            goalLink.addEventListener('click', () => {
+                                if (node === startNode) {
+                                    return;
+                                }
+                                if (goalNode !== undefined) {
+                                    (nodeIdToCircle.get(goalNode.id) as L.Circle)
+                                        .setStyle(defaultCircleStyle);
+                                }
+                                goalNode = node;
+                                goalNodeIdElem.textContent = goalNode.id.toString();
+                                checkSearchButton();
+                                circle.closePopup();
+                                (circle as L.Circle).setStyle(Object.assign({
+                                    color: 'green'
+                                }, defaultCircleStyle));
+                            });
+                            elem.appendChild(goalLink);
+                            return elem;
+                        }).addTo(map));
+                }
                 const radioToFunction: { [id: string]: SearchFunction } = {
                     'uniform-cost-radio': uniformCostSearch,
                     'greedy-radio': greedySearch,
