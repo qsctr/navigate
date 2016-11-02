@@ -200,9 +200,11 @@ onerror = alert;
 
         expandedResult.textContent = expanded.length.toString();
         for (const exp of expanded) {
-            (nodeIdToCircle.get(exp.id) as L.Circle).setStyle({
-                color: colors.expanded
-            });
+            if (exp !== startNode && exp !== goalNode) {
+                (nodeIdToCircle.get(exp.id) as L.Circle).setStyle({
+                    color: colors.expanded
+                });
+            }
         }
 
         if (path === undefined) {
@@ -232,14 +234,17 @@ onerror = alert;
 
     function chooseAgain() {
 
-        for (const circle of nodeIdToCircle.values()) {
-            circle.setStyle({
-                color: colors.default
-            });
-            if (pathLine !== null) {
-                pathLine.remove();
-                pathLine = null;
+        for (const [id, circle] of nodeIdToCircle.entries()) {
+            if (id !== (startNode as GraphNode).id && id !== (goalNode as GraphNode).id) {
+                circle.setStyle({
+                    color: colors.default
+                });
             }
+        }
+
+        if (pathLine !== null) {
+            pathLine.remove();
+            pathLine = null;
         }
 
         showOnly(chooseScreen);
