@@ -1,5 +1,6 @@
 {
     "compilerOptions": {
+        "target": "es6",
         "noImplicitAny": true,
         "noImplicitReturns": true,
         "strictNullChecks": true,
@@ -10,7 +11,7 @@
         "inlineSourceMap": true,
         "inlineSources": true,
         "rootDir": "./src-ts",
-        "outDir": "./out-js",
+        "outFile": "./out-js/out.js",
         "lib": ["dom", "es2015", "es2016.array.include"]
     }
 }

@@ -11,7 +11,7 @@ interface GraphNode {
     readonly connections: Connection[];
 }
 
-interface Connection {
+interface Connection { // "Adjacency" is too hard to spell
     readonly distance: Distance;
     readonly child: GraphNode;
 }
@@ -35,10 +35,13 @@ interface OverpassJSON {
     }[];
 }
 
-type SearchFunction = (start: GraphNode, goal: GraphNode) => {
+type SearchFunction = (start: GraphNode, goal: GraphNode) => SearchResult;
+
+type SearchResult = {
     expanded: GraphNode[],
-    path: GraphNode[]
-} | null;
+    path?: GraphNode[],
+    fringe?: PriorityQueue<GraphNode>
+};
 
 const uniformCostSearch: SearchFunction = (start, goal) =>
     bestFirstSearch(start, goal, ({ parentScore, distance }) => parentScore + distance);
@@ -50,37 +53,39 @@ const aStarSearch: SearchFunction = (start, goal) =>
     bestFirstSearch(start, goal, ({ node, parentScore, distance }) =>
         parentScore + distance + distanceBetween(node, goal));
 
-function bestFirstSearch(start: GraphNode, goal: GraphNode, scoreFunc: ScoringFunction) {
+function bestFirstSearch(start: GraphNode, goal: GraphNode,
+scoreFunc: ScoringFunction): SearchResult {
     const expanded: GraphNode[] = [];
     const scores = new Map<Id, Score>([[start.id, scoreFunc({
         node: start,
         parentScore: 0,
         distance: 0
     })]]);
-    const parents = new Map<GraphNode, GraphNode>();
+    const parents = new Map<Id, GraphNode>();
     const fringe = new PriorityQueue<GraphNode>({
         comparator: (a: GraphNode, b: GraphNode) => scores.get(a.id) - scores.get(b.id),
         initialValues: [start]
     });
     while (fringe.length > 0) {
         const current = fringe.dequeue();
-        const currentScore = scores.get(current.id) as Score;
+        if (expanded.includes(current)) {
+            continue;
+        }
         expanded.push(current);
+        const currentScore = scores.get(current.id) as Score;
+        if (current === goal) {
+            const path = [goal];
+            let parent = goal;
+            while (parent !== start) {
+                parent = parents.get(parent.id) as GraphNode;
+                path.unshift(parent);
+            }
+            return { expanded, path, fringe };
+        }
         for (const { distance, child } of current.connections) {
             if (expanded.includes(child)) {
                 continue;
             }
-            if (child === goal) {
-                expanded.push(child);
-                const path = [current, goal];
-                let parent = current;
-                while (parent !== start) {
-                    parent = parents.get(parent) as GraphNode;
-                    path.unshift(parent);
-                }
-                return { expanded, path };
-            }
-            parents.set(child, current);
             const oldChildScore = scores.get(child.id);
             const newChildScore = scoreFunc({
                 node: child,
@@ -89,11 +94,12 @@ function bestFirstSearch(start: GraphNode, goal: GraphNode, scoreFunc: ScoringFu
             });
             if (oldChildScore === undefined || newChildScore < oldChildScore) {
                 scores.set(child.id, newChildScore);
+                parents.set(child.id, current);
                 fringe.queue(child);
             }
         }
     }
-    return null;
+    return { expanded };
 }
 
 function distanceBetween(a: GraphNode, b: GraphNode) {
@@ -127,10 +133,10 @@ function overpassToGraphNodes({ elements }: OverpassJSON) {
             prevGraphNode = graphNode;
         });
     }
+    return graphNodes;
     function connect(a: GraphNode, b: GraphNode) {
         const distance = distanceBetween(a, b);
         a.connections.push({ distance, child: b });
         b.connections.push({ distance, child: a });
     }
-    return graphNodes;
 }

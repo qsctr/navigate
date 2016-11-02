@@ -24,7 +24,7 @@
                 <br>
                 <div class="mdl-progress mdl-js-progress mdl-progress__indeterminate" id="query-progress"></div>
                 <br>
-                <p id="query-state"></p>
+                <p>Querying Overpass API...</p>
             </div>
             <div id="choose-screen">
                 <p><span id="nodes-created"></span> nodes created.</p>
@@ -47,15 +47,14 @@
                 <button class="mdl-button mdl-js-button mdl-button--raised mdl-js-ripple-effect mdl-button--colored" id="search-button" disabled>Start search</button>
             </div>
             <div id="results-screen">
-                <br>
-                <div class="mdl-progress mdl-js-progress" id="search-progress"></div>
-                <br>
-                <p id="search-state"></p>
+                <p id="path-result" class="teal"></p>
+                <p class="darkblue"><span id="expanded-result"></span> nodes expanded.</p>
+                <p class="orange"><span id="fringe-result"></span> nodes left in fringe.</p>
+                <button id="back-button" class="mdl-button mdl-js-button mdl-button--raised mdl-js-ripple-effect mdl-button--colored">Back</button>
             </div>
         </div>
         <script src="https://unpkg.com/leaflet@1.0.1/dist/leaflet.js"></script>
         <script src="https://cdn.rawgit.com/adamhooper/js-priority-queue/v0.1.5/priority-queue.min.js"></script>
-        <script src="out-js/search.js"></script>
-        <script src="out-js/ui.js"></script>
+        <script src="out-js/out.js"></script>
     </body>
 </html>
