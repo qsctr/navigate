@@ -17,9 +17,8 @@ interface Connection { // "Adjacency" is too hard to spell
 }
 
 type ScoringFunction = (info: {
-    node: GraphNode;
-    parentScore: Score;
-    distance: Distance;
+    node: GraphNode
+    pathDistance: Distance;
 }) => Score;
 
 interface OverpassJSON {
@@ -44,26 +43,27 @@ type SearchResult = {
 };
 
 const uniformCostSearch: SearchFunction = (start, goal) =>
-    bestFirstSearch(start, goal, ({ parentScore, distance }) => parentScore + distance);
+    bestFirstSearch(start, goal, ({ pathDistance }) => pathDistance);
 
 const greedySearch: SearchFunction = (start, goal) =>
     bestFirstSearch(start, goal, ({ node }) => distanceBetween(node, goal));
 
 const aStarSearch: SearchFunction = (start, goal) =>
-    bestFirstSearch(start, goal, ({ node, parentScore, distance }) =>
-        parentScore + distance + distanceBetween(node, goal));
+    bestFirstSearch(start, goal, ({ node, pathDistance }) =>
+        pathDistance + distanceBetween(node, goal));
 
 function bestFirstSearch(start: GraphNode, goal: GraphNode,
 scoreFunc: ScoringFunction): SearchResult {
     const expanded: GraphNode[] = [];
+    const pathDistances = new Map<Id, Distance>([[start.id, 0]]);
     const scores = new Map<Id, Score>([[start.id, scoreFunc({
         node: start,
-        parentScore: 0,
-        distance: 0
+        pathDistance: 0
     })]]);
     const parents = new Map<Id, GraphNode>();
     const fringe = new PriorityQueue<GraphNode>({
-        comparator: (a: GraphNode, b: GraphNode) => scores.get(a.id) - scores.get(b.id),
+        comparator: (a: GraphNode, b: GraphNode) =>
+            (scores.get(a.id) as Score) - (scores.get(b.id) as Score),
         initialValues: [start]
     });
     while (fringe.length > 0) {
@@ -72,7 +72,7 @@ scoreFunc: ScoringFunction): SearchResult {
             continue;
         }
         expanded.push(current);
-        const currentScore = scores.get(current.id) as Score;
+        const currentPathDistance = pathDistances.get(current.id) as Distance;
         if (current === goal) {
             const path = [goal];
             let parent = goal;
@@ -89,10 +89,10 @@ scoreFunc: ScoringFunction): SearchResult {
             const oldChildScore = scores.get(child.id);
             const newChildScore = scoreFunc({
                 node: child,
-                parentScore: currentScore,
-                distance
+                pathDistance: currentPathDistance + distance
             });
             if (oldChildScore === undefined || newChildScore < oldChildScore) {
+                pathDistances.set(child.id, currentPathDistance + distance);
                 scores.set(child.id, newChildScore);
                 parents.set(child.id, current);
                 fringe.queue(child);
